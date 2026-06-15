@@ -21,7 +21,7 @@
             position: relative;
             width: 100vw;
             height: 100vh;
-            background: #111;
+            background: #000;
         }
 
         .slide {
@@ -94,15 +94,33 @@
             z-index: 0;
         }
 
+        /* Overlay oscuro sobre la imagen de fondo */
+        .slide .item:nth-child(2)::before {
+            content: '';            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, 
+                rgba(0,0,0,0.4) 0%, 
+                rgba(0,0,0,0.1) 40%, 
+                rgba(0,0,0,0.3) 70%, 
+                rgba(0,0,0,0.8) 100%);
+            z-index: 3;
+            pointer-events: none;
+        }
+
         .content {
             position: absolute;
-            top: 50%;            left: 10%;
-            transform: translateY(-50%);
-            width: min(40vw, 500px);
+            top: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: min(90vw, 700px);
             color: #fff;
             text-shadow: 0 4px 12px rgba(0, 0, 0, 0.9);
             display: none; 
             z-index: 5;
+            text-align: center;
         }
 
         .slide .item:nth-child(2) .content {
@@ -113,41 +131,107 @@
             font-family: 'Arial Black', sans-serif;
             font-size: 3rem;
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
             line-height: 1;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             opacity: 0;
             animation: animateText 1.5s ease-in-out 0.5s 1 forwards;
         }
 
         .content .description {
-            margin: 15px 0;
-            font-size: 1rem;
+            margin: 10px auto;
+            font-size: 1.1rem;
             line-height: 1.6;
+            max-width: 600px;
             opacity: 0;
             animation: animateText 1.5s ease-in-out 0.8s 1 forwards;
         }
-
         .content .info-box {
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(10px);
             border-left: 4px solid #ffd700;
-            padding: 20px 25px;
-            margin: 25px 0;
+            padding: 20px 30px;
+            margin: 20px auto;
             border-radius: 0 10px 10px 0;
             opacity: 0;
             animation: animateText 1.5s ease-in-out 1.1s 1 forwards;
+            max-width: 500px;
+            text-align: left;
         }
 
         .content .info-box p {
             font-size: 1rem;
             line-height: 2;
-            margin: 8px 0;
+            margin: 5px 0;
         }
 
-        .content .info-box .label {            font-weight: bold;
+        .content .info-box .label {
+            font-weight: bold;
             color: #ffd700;
             margin-right: 10px;
+        }
+
+        /* Panel de información inferior */
+        .bottom-info {
+            position: absolute;
+            bottom: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: min(90vw, 800px);
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(15px);
+            border-radius: 15px;
+            padding: 20px 30px;
+            z-index: 10;
+            display: none;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .slide .item:nth-child(2) ~ .bottom-info,
+        .slide .item:nth-child(2) + .bottom-info {
+            display: none;
+        }
+
+        .bottom-info.visible {
+            display: block;
+            opacity: 0;            animation: animateText 1.5s ease-in-out 1.4s 1 forwards;
+        }
+
+        .bottom-info .info-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .bottom-info .info-item {
+            text-align: center;
+            padding: 10px;
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .bottom-info .info-item:last-child {
+            border-right: none;
+        }
+
+        .bottom-info .info-item .info-label {
+            font-size: 0.75rem;
+            color: #ffd700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .bottom-info .info-item .info-value {
+            font-size: 1rem;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .bottom-info .info-item .info-desc {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 3px;
         }
 
         @keyframes animateText {
@@ -159,16 +243,18 @@
             to {
                 opacity: 1;
                 transform: translateY(0);
-                filter: blur(0);
-            }
+                filter: blur(0);            }
         }
 
         .buttons {
             position: absolute;
-            bottom: 8%;
-            left: 10%;
-            width: 100%;
+            bottom: 5%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: auto;
             z-index: 20;
+            display: flex;
+            gap: 15px;
         }
 
         .buttons button {
@@ -180,7 +266,6 @@
             color: #fff;
             font-size: 1.2rem;
             cursor: pointer;
-            margin-right: 15px;
             transition: all 0.5s ease;
             backdrop-filter: blur(10px);
         }
@@ -194,7 +279,8 @@
         }
 
         @media screen and (max-width: 1024px) {
-            .slide .item {                width: 150px;
+            .slide .item {
+                width: 150px;
                 height: 220px;
             }
 
@@ -206,10 +292,9 @@
                 left: calc(50% + 660px);
                 opacity: 0;
             }
-
             .content {
-                left: 5%;
-                width: 45%;
+                top: 10%;
+                width: 90%;
             }
 
             .content .title {
@@ -217,11 +302,20 @@
             }
 
             .content .description {
-                font-size: 0.9rem;
+                font-size: 0.95rem;
             }
 
             .content .info-box p {
                 font-size: 0.9rem;
+            }
+
+            .bottom-info .info-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .bottom-info .info-item {
+                border-right: none;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.2);
             }
         }
 
@@ -243,36 +337,33 @@
             }
 
             .slide .item:nth-child(3) { left: 48%; top: auto; bottom: 15%; }
-            .slide .item:nth-child(4) { left: calc(48% + 110px); top: auto; bottom: 15%; }            .slide .item:nth-child(5) { left: calc(48% + 220px); top: auto; bottom: 15%; }
+            .slide .item:nth-child(4) { left: calc(48% + 110px); top: auto; bottom: 15%; }
+            .slide .item:nth-child(5) { left: calc(48% + 220px); top: auto; bottom: 15%; }
             .slide .item:nth-child(6) { left: calc(48% + 330px); top: auto; bottom: 15%; }
             .slide .item:nth-child(n+7) {
-                left: calc(48% + 440px);
-                opacity: 0;
+                left: calc(48% + 440px);                opacity: 0;
             }
 
             .content {
-                top: 25%;
-                left: 50%;
-                width: 90%;
-                transform: translateX(-50%);
-                text-align: center;
+                top: 8%;
+                width: 95%;
             }
 
             .content .title {
                 font-size: 1.6rem;
-                margin-bottom: 10px;
+                margin-bottom: 8px;
+                letter-spacing: 2px;
             }
 
             .content .description {
                 font-size: 0.85rem;
-                margin: 10px 0;
+                margin: 8px auto;
                 line-height: 1.4;
             }
 
             .content .info-box {
                 padding: 15px 20px;
-                margin: 20px 0;
-                text-align: left;
+                margin: 15px auto;
             }
 
             .content .info-box p {
@@ -280,19 +371,36 @@
                 line-height: 1.8;
             }
 
+            .bottom-info {
+                bottom: 22%;
+                padding: 15px 20px;
+            }
+
+            .bottom-info .info-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+
+            .bottom-info .info-item .info-label {
+                font-size: 0.65rem;
+            }
+
+            .bottom-info .info-item .info-value {
+                font-size: 0.85rem;
+            }
+
+            .bottom-info .info-item .info-desc {
+                font-size: 0.65rem;            }
+
             .buttons {
-                bottom: 5%;
-                left: 50%;
-                transform: translateX(-50%);
-                width: auto;
-                text-align: center;
+                bottom: 3%;
             }
 
             .buttons button {
                 width: 50px;
                 height: 50px;
                 font-size: 1.2rem;
-                margin: 0 10px;            }
+            }
         }
 
         @media screen and (max-width: 480px) {
@@ -331,8 +439,7 @@
 </head>
 <body>
 
-    <div class="container">
-        <div class="slide" id="slide">
+    <div class="container">        <div class="slide" id="slide">
             
             <!-- Atracción 1: Xcalibur Alpine Coaster -->
             <div class="item" style="background-image: url('xcalibur.jpg');">
@@ -341,7 +448,32 @@
                     <div class="description">Montaña rusa alpina en el bosque de más de 1 kilómetro de largo. ¡Una experiencia llena de adrenalina entre los árboles!</div>
                     <div class="info-box">
                         <p><span class="label">Estatura mínima:</span> 1.00 m</p>
-                    </div>                </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bottom-info" id="info-xcalibur">
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Duración</div>
+                        <div class="info-value">3-5 min</div>
+                        <div class="info-desc">Recorrido completo</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Velocidad</div>
+                        <div class="info-value">40 km/h</div>
+                        <div class="info-desc">Máxima alcanzada</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Horario</div>
+                        <div class="info-value">10:00 - 18:00</div>
+                        <div class="info-desc">Todos los días</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Nivel</div>
+                        <div class="info-value">Emocionante</div>
+                        <div class="info-desc">Adrenalina media-alta</div>
+                    </div>
+                </div>
             </div>
 
             <!-- Atracción 2: Tirolesa Kamba -->
@@ -352,6 +484,29 @@
                     <div class="info-box">
                         <p><span class="label">Estatura mínima:</span> 1.40 m</p>
                         <p><span class="label">Peso máximo:</span> 85 kg</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bottom-info" id="info-tirolesa">
+                <div class="info-grid">                    <div class="info-item">
+                        <div class="info-label">Duración</div>
+                        <div class="info-value">2-3 min</div>
+                        <div class="info-desc">Vuelo completo</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Altura</div>
+                        <div class="info-value">10 metros</div>
+                        <div class="info-desc">Sobre el suelo</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Horario</div>
+                        <div class="info-value">10:00 - 17:00</div>
+                        <div class="info-desc">Clima permitting</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Nivel</div>
+                        <div class="info-value">Extremo</div>
+                        <div class="info-desc">Alta adrenalina</div>
                     </div>
                 </div>
             </div>
@@ -367,6 +522,29 @@
                     </div>
                 </div>
             </div>
+            <div class="bottom-info" id="info-deslizador">
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Duración</div>
+                        <div class="info-value">1-2 min</div>
+                        <div class="info-desc">Descenso rápido</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Temperatura</div>
+                        <div class="info-value">-5°C</div>
+                        <div class="info-desc">Ambiente helado</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Horario</div>
+                        <div class="info-value">10:00 - 18:00</div>
+                        <div class="info-desc">Todos los días</div>                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Nivel</div>
+                        <div class="info-value">Divertido</div>
+                        <div class="info-desc">Para toda la familia</div>
+                    </div>
+                </div>
+            </div>
 
             <!-- Atracción 4: Subterránium -->
             <div class="item" style="background-image: url('subterránium.webp');">
@@ -378,24 +556,95 @@
                     </div>
                 </div>
             </div>
+            <div class="bottom-info" id="info-subterraneum">
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Duración</div>
+                        <div class="info-value">15-20 min</div>
+                        <div class="info-desc">Recorrido guiado</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Profundidad</div>
+                        <div class="info-value">500 metros</div>
+                        <div class="info-desc">Bajo tierra</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Horario</div>
+                        <div class="info-value">9:00 - 17:00</div>
+                        <div class="info-desc">Cada 30 min</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Nivel</div>
+                        <div class="info-value">Educativo</div>
+                        <div class="info-desc">Interactivo y cultural</div>
+                    </div>
+                </div>
+            </div>
 
             <!-- Atracción 5: Reserva Serengeti -->
             <div class="item" style="background-image: url('safari.jpg');">
                 <div class="content">
                     <div class="title">Reserva Serengeti</div>
                     <div class="description">Safari en un camión panorámico para convivir y alimentar animales en libertad. ¡Una aventura africana en México!</div>
-                    <div class="info-box">
-                        <p><span class="label">Apto para:</span> Todo público</p>
+                    <div class="info-box">                        <p><span class="label">Apto para:</span> Todo público</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bottom-info" id="info-safari">
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Duración</div>
+                        <div class="info-value">20-30 min</div>
+                        <div class="info-desc">Recorrido completo</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Especies</div>
+                        <div class="info-value">+50</div>
+                        <div class="info-desc">Animales en libertad</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Horario</div>
+                        <div class="info-value">9:00 - 16:00</div>
+                        <div class="info-desc">Cada hora</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Nivel</div>
+                        <div class="info-value">Familiar</div>
+                        <div class="info-desc">Interacción segura</div>
                     </div>
                 </div>
             </div>
 
-            <!-- Atracción 6: Bucaneros y Lobos de Mar -->            <div class="item" style="background-image: url('bucaneros.jpg');">
+            <!-- Atracción 6: Bucaneros y Lobos de Mar -->
+            <div class="item" style="background-image: url('bucaneros.jpg');">
                 <div class="content">
                     <div class="title">Bucaneros y Lobos de Mar</div>
                     <div class="description">Espectáculo familiar en vivo con lobos marinos dentro de un barco pirata. ¡Diversión para toda la familia!</div>
                     <div class="info-box">
                         <p><span class="label">Apto para:</span> Todo público</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bottom-info" id="info-bucaneros">
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Duración</div>
+                        <div class="info-value">25-30 min</div>
+                        <div class="info-desc">Espectáculo completo</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Funciones</div>
+                        <div class="info-value">4 al día</div>
+                        <div class="info-desc">12:00, 14:00, 16:00, 18:00</div>                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Capacidad</div>
+                        <div class="info-value">200 personas</div>
+                        <div class="info-desc">Por función</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Nivel</div>
+                        <div class="info-value">Entretenimiento</div>
+                        <div class="info-desc">Show en vivo</div>
                     </div>
                 </div>
             </div>
@@ -413,8 +662,30 @@
         const prev = document.querySelector('.prev');
         const slide = document.getElementById('slide');
 
+        const infoIds = ['info-xcalibur', 'info-tirolesa', 'info-deslizador', 'info-subterraneum', 'info-safari', 'info-bucaneros'];
+
         function updateSlides() {
             const items = document.querySelectorAll('.item');
+            const bottomInfos = document.querySelectorAll('.bottom-info');
+            
+            // Ocultar todos los paneles de información
+            bottomInfos.forEach(info => {
+                info.classList.remove('visible');
+            });
+
+            // Mostrar el panel correspondiente a la segunda tarjeta (la activa)
+            const secondItem = items[1];
+            if (secondItem) {
+                const index = Array.from(items).indexOf(secondItem);
+                if (infoIds[index]) {
+                    const infoPanel = document.getElementById(infoIds[index]);
+                    if (infoPanel) {
+                        setTimeout(() => {
+                            infoPanel.classList.add('visible');
+                        }, 100);
+                    }
+                }            }
+
             items.forEach((item) => {
                 void item.offsetWidth;
             });
@@ -439,7 +710,8 @@
                 updateSlides();
             } else if (e.key === 'ArrowLeft') {
                 const items = document.querySelectorAll('.item');
-                slide.prepend(items[items.length - 1]);                updateSlides();
+                slide.prepend(items[items.length - 1]);
+                updateSlides();
             }
         });
 
@@ -461,8 +733,7 @@
                 slide.appendChild(items[0]);
                 updateSlides();
             }
-            if (touchEndX > touchStartX + 50) {
-                slide.prepend(items[items.length - 1]);
+            if (touchEndX > touchStartX + 50) {                slide.prepend(items[items.length - 1]);
                 updateSlides();
             }
         }
