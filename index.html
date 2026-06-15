@@ -27,6 +27,7 @@
         .slide {
             width: 100%;
             height: 100%;
+            position: relative;
         }
 
         .slide .item {
@@ -39,16 +40,18 @@
             box-shadow: 0 30px 50px rgba(0, 0, 0, 0.6);
             background-position: center;
             background-size: cover;
+            background-repeat: no-repeat;
             display: inline-block;
             transition: transform 2.5s cubic-bezier(0.25, 1, 0.5, 1), 
                         left 2.5s cubic-bezier(0.25, 1, 0.5, 1), 
                         top 2.5s cubic-bezier(0.25, 1, 0.5, 1), 
                         width 2.5s cubic-bezier(0.25, 1, 0.5, 1), 
                         height 2.5s cubic-bezier(0.25, 1, 0.5, 1),
-                        opacity 2.5s ease;
-        }
-        .slide .item:nth-child(1),
-        .slide .item:nth-child(2) {
+                        opacity 2.5s ease;        }
+
+        /* Las dos primeras tarjetas toman la pantalla completa */
+        .slide .item:nth-of-type(1),
+        .slide .item:nth-of-type(2) {
             top: 0;
             left: 0;
             transform: none;
@@ -57,59 +60,62 @@
             height: 100%;
         }
 
-        .slide .item:nth-child(1) {
+        .slide .item:nth-of-type(1) {
             z-index: 1;
             opacity: 0.3;
         }
 
-        .slide .item:nth-child(2) {
+        .slide .item:nth-of-type(2) {
             z-index: 2;
             opacity: 1;
         }
 
-        .slide .item:nth-child(3) { 
-            left: 55%; 
-            top: 60%;
-            z-index: 3;
-        }
-        .slide .item:nth-child(4) { 
-            left: calc(55% + 220px); 
-            top: 60%;
-            z-index: 3;
-        }
-        .slide .item:nth-child(5) { 
-            left: calc(55% + 440px); 
-            top: 60%;
-            z-index: 3;
-        }
-        .slide .item:nth-child(6) { 
-            left: calc(55% + 660px); 
-            top: 60%;
-            z-index: 3;
-        }
-        
-        .slide .item:nth-child(n+7) {
-            left: calc(55% + 880px);
-            opacity: 0;
-            z-index: 0;
-        }
-
-        /* Overlay oscuro sobre la imagen de fondo */
-        .slide .item:nth-child(2)::before {
-            content: '';            position: absolute;
+        /* Overlay sobre la imagen activa */
+        .slide .item:nth-of-type(2)::before {
+            content: '';
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             background: linear-gradient(to bottom, 
-                rgba(0,0,0,0.4) 0%, 
-                rgba(0,0,0,0.1) 40%, 
-                rgba(0,0,0,0.3) 70%, 
-                rgba(0,0,0,0.8) 100%);
+                rgba(0,0,0,0.5) 0%, 
+                rgba(0,0,0,0.2) 30%, 
+                rgba(0,0,0,0.1) 50%,
+                rgba(0,0,0,0.4) 70%, 
+                rgba(0,0,0,0.85) 100%);
             z-index: 3;
             pointer-events: none;
         }
 
+        /* Thumbnails a la derecha */
+        .slide .item:nth-of-type(3) { 
+            left: 55%; 
+            top: 55%;
+            z-index: 3;
+        }
+        .slide .item:nth-of-type(4) { 
+            left: calc(55% + 220px); 
+            top: 55%;            z-index: 3;
+        }
+        .slide .item:nth-of-type(5) { 
+            left: calc(55% + 440px); 
+            top: 55%;
+            z-index: 3;
+        }
+        .slide .item:nth-of-type(6) { 
+            left: calc(55% + 660px); 
+            top: 55%;
+            z-index: 3;
+        }
+        
+        .slide .item:nth-of-type(n+7) {
+            left: calc(55% + 880px);
+            opacity: 0;
+            z-index: 0;
+        }
+
+        /* Contenido de texto */
         .content {
             position: absolute;
             top: 15%;
@@ -123,7 +129,7 @@
             text-align: center;
         }
 
-        .slide .item:nth-child(2) .content {
+        .slide .item:nth-of-type(2) .content {
             display: block;
         }
 
@@ -139,13 +145,13 @@
         }
 
         .content .description {
-            margin: 10px auto;
-            font-size: 1.1rem;
+            margin: 10px auto;            font-size: 1.1rem;
             line-height: 1.6;
             max-width: 600px;
             opacity: 0;
             animation: animateText 1.5s ease-in-out 0.8s 1 forwards;
         }
+
         .content .info-box {
             background: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(10px);
@@ -171,10 +177,10 @@
             margin-right: 10px;
         }
 
-        /* Panel de información inferior */
+        /* Panel de información inferior - FUERA del slide */
         .bottom-info {
             position: absolute;
-            bottom: 15%;
+            bottom: 12%;
             left: 50%;
             transform: translateX(-50%);
             width: min(90vw, 800px);
@@ -187,14 +193,13 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .slide .item:nth-child(2) ~ .bottom-info,
-        .slide .item:nth-child(2) + .bottom-info {
-            display: none;
+        .bottom-info.visible {
+            display: block;            animation: fadeIn 1.5s ease-in-out 0.5s 1 forwards;
         }
 
-        .bottom-info.visible {
-            display: block;
-            opacity: 0;            animation: animateText 1.5s ease-in-out 1.4s 1 forwards;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
         }
 
         .bottom-info .info-grid {
@@ -237,21 +242,21 @@
         @keyframes animateText {
             from {
                 opacity: 0;
-                transform: translateY(60px);
-                filter: blur(20px);
-            }
+                transform: translateY(30px);
+                filter: blur(10px);            }
             to {
                 opacity: 1;
                 transform: translateY(0);
-                filter: blur(0);            }
+                filter: blur(0);
+            }
         }
 
+        /* Botones de navegación */
         .buttons {
             position: absolute;
-            bottom: 5%;
+            bottom: 4%;
             left: 50%;
             transform: translateX(-50%);
-            width: auto;
             z-index: 20;
             display: flex;
             gap: 15px;
@@ -261,13 +266,16 @@
             width: 55px;
             height: 55px;
             border-radius: 50%;
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            background: rgba(0, 0, 0, 0.4);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            background: rgba(0, 0, 0, 0.5);
             color: #fff;
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             cursor: pointer;
             transition: all 0.5s ease;
             backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .buttons button:hover {
@@ -278,23 +286,19 @@
             box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
         }
 
+        /* Responsive */
         @media screen and (max-width: 1024px) {
             .slide .item {
                 width: 150px;
                 height: 220px;
             }
-
-            .slide .item:nth-child(3) { left: 50%; top: 55%; }
-            .slide .item:nth-child(4) { left: calc(50% + 165px); top: 55%; }
-            .slide .item:nth-child(5) { left: calc(50% + 330px); top: 55%; }
-            .slide .item:nth-child(6) { left: calc(50% + 495px); top: 55%; }
-            .slide .item:nth-child(n+7) {
+            .slide .item:nth-of-type(3) { left: 50%; top: 55%; }
+            .slide .item:nth-of-type(4) { left: calc(50% + 165px); top: 55%; }
+            .slide .item:nth-of-type(5) { left: calc(50% + 330px); top: 55%; }
+            .slide .item:nth-of-type(6) { left: calc(50% + 495px); top: 55%; }
+            .slide .item:nth-of-type(n+7) {
                 left: calc(50% + 660px);
                 opacity: 0;
-            }
-            .content {
-                top: 10%;
-                width: 90%;
             }
 
             .content .title {
@@ -303,10 +307,6 @@
 
             .content .description {
                 font-size: 0.95rem;
-            }
-
-            .content .info-box p {
-                font-size: 0.9rem;
             }
 
             .bottom-info .info-grid {
@@ -324,23 +324,23 @@
                 width: 100px;
                 height: 140px;
                 top: auto;
-                bottom: 15%;
+                bottom: 12%;
                 transform: none;
                 border-radius: 12px;
             }
 
-            .slide .item:nth-child(1),
-            .slide .item:nth-child(2) {
+            .slide .item:nth-of-type(1),
+            .slide .item:nth-of-type(2) {
                 top: 0;
                 bottom: auto;
                 border-radius: 0;
             }
 
-            .slide .item:nth-child(3) { left: 48%; top: auto; bottom: 15%; }
-            .slide .item:nth-child(4) { left: calc(48% + 110px); top: auto; bottom: 15%; }
-            .slide .item:nth-child(5) { left: calc(48% + 220px); top: auto; bottom: 15%; }
-            .slide .item:nth-child(6) { left: calc(48% + 330px); top: auto; bottom: 15%; }
-            .slide .item:nth-child(n+7) {
+            .slide .item:nth-of-type(3) { left: 48%; top: auto; bottom: 12%; }
+            .slide .item:nth-of-type(4) { left: calc(48% + 110px); top: auto; bottom: 12%; }
+            .slide .item:nth-of-type(5) { left: calc(48% + 220px); top: auto; bottom: 12%; }
+            .slide .item:nth-of-type(6) { left: calc(48% + 330px); top: auto; bottom: 12%; }
+            .slide .item:nth-of-type(n+7) {
                 left: calc(48% + 440px);                opacity: 0;
             }
 
@@ -372,7 +372,7 @@
             }
 
             .bottom-info {
-                bottom: 22%;
+                bottom: 20%;
                 padding: 15px 20px;
             }
 
@@ -392,10 +392,6 @@
             .bottom-info .info-item .info-desc {
                 font-size: 0.65rem;            }
 
-            .buttons {
-                bottom: 3%;
-            }
-
             .buttons button {
                 width: 50px;
                 height: 50px;
@@ -409,11 +405,11 @@
                 height: 110px;
             }
 
-            .slide .item:nth-child(3) { left: 45%; }
-            .slide .item:nth-child(4) { left: calc(45% + 90px); }
-            .slide .item:nth-child(5) { left: calc(45% + 180px); }
-            .slide .item:nth-child(6) { left: calc(45% + 270px); }
-            .slide .item:nth-child(n+7) {
+            .slide .item:nth-of-type(3) { left: 45%; }
+            .slide .item:nth-of-type(4) { left: calc(45% + 90px); }
+            .slide .item:nth-of-type(5) { left: calc(45% + 180px); }
+            .slide .item:nth-of-type(6) { left: calc(45% + 270px); }
+            .slide .item:nth-of-type(n+7) {
                 left: calc(45% + 360px);
                 opacity: 0;
             }
@@ -439,39 +435,15 @@
 </head>
 <body>
 
-    <div class="container">        <div class="slide" id="slide">
+    <div class="container">
+        <div class="slide" id="slide">
             
             <!-- Atracción 1: Xcalibur Alpine Coaster -->
-            <div class="item" style="background-image: url('xcalibur.jpg');">
-                <div class="content">
+            <div class="item" style="background-image: url('xcalibur.jpg');">                <div class="content">
                     <div class="title">Xcalibur Alpine Coaster</div>
                     <div class="description">Montaña rusa alpina en el bosque de más de 1 kilómetro de largo. ¡Una experiencia llena de adrenalina entre los árboles!</div>
                     <div class="info-box">
                         <p><span class="label">Estatura mínima:</span> 1.00 m</p>
-                    </div>
-                </div>
-            </div>
-            <div class="bottom-info" id="info-xcalibur">
-                <div class="info-grid">
-                    <div class="info-item">
-                        <div class="info-label">Duración</div>
-                        <div class="info-value">3-5 min</div>
-                        <div class="info-desc">Recorrido completo</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">Velocidad</div>
-                        <div class="info-value">40 km/h</div>
-                        <div class="info-desc">Máxima alcanzada</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">Horario</div>
-                        <div class="info-value">10:00 - 18:00</div>
-                        <div class="info-desc">Todos los días</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">Nivel</div>
-                        <div class="info-value">Emocionante</div>
-                        <div class="info-desc">Adrenalina media-alta</div>
                     </div>
                 </div>
             </div>
@@ -487,29 +459,6 @@
                     </div>
                 </div>
             </div>
-            <div class="bottom-info" id="info-tirolesa">
-                <div class="info-grid">                    <div class="info-item">
-                        <div class="info-label">Duración</div>
-                        <div class="info-value">2-3 min</div>
-                        <div class="info-desc">Vuelo completo</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">Altura</div>
-                        <div class="info-value">10 metros</div>
-                        <div class="info-desc">Sobre el suelo</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">Horario</div>
-                        <div class="info-value">10:00 - 17:00</div>
-                        <div class="info-desc">Clima permitting</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">Nivel</div>
-                        <div class="info-value">Extremo</div>
-                        <div class="info-desc">Alta adrenalina</div>
-                    </div>
-                </div>
-            </div>
 
             <!-- Atracción 3: Deslizador Antártica -->
             <div class="item" style="background-image: url('deslizador.jpg');">
@@ -519,29 +468,6 @@
                     <div class="info-box">
                         <p><span class="label">Estatura mínima:</span> 1.20 m</p>
                         <p><span class="label">Peso máximo:</span> 75-85 kg</p>
-                    </div>
-                </div>
-            </div>
-            <div class="bottom-info" id="info-deslizador">
-                <div class="info-grid">
-                    <div class="info-item">
-                        <div class="info-label">Duración</div>
-                        <div class="info-value">1-2 min</div>
-                        <div class="info-desc">Descenso rápido</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">Temperatura</div>
-                        <div class="info-value">-5°C</div>
-                        <div class="info-desc">Ambiente helado</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">Horario</div>
-                        <div class="info-value">10:00 - 18:00</div>
-                        <div class="info-desc">Todos los días</div>                    </div>
-                    <div class="info-item">
-                        <div class="info-label">Nivel</div>
-                        <div class="info-value">Divertido</div>
-                        <div class="info-desc">Para toda la familia</div>
                     </div>
                 </div>
             </div>
@@ -556,30 +482,6 @@
                     </div>
                 </div>
             </div>
-            <div class="bottom-info" id="info-subterraneum">
-                <div class="info-grid">
-                    <div class="info-item">
-                        <div class="info-label">Duración</div>
-                        <div class="info-value">15-20 min</div>
-                        <div class="info-desc">Recorrido guiado</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">Profundidad</div>
-                        <div class="info-value">500 metros</div>
-                        <div class="info-desc">Bajo tierra</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">Horario</div>
-                        <div class="info-value">9:00 - 17:00</div>
-                        <div class="info-desc">Cada 30 min</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">Nivel</div>
-                        <div class="info-value">Educativo</div>
-                        <div class="info-desc">Interactivo y cultural</div>
-                    </div>
-                </div>
-            </div>
 
             <!-- Atracción 5: Reserva Serengeti -->
             <div class="item" style="background-image: url('safari.jpg');">
@@ -587,30 +489,6 @@
                     <div class="title">Reserva Serengeti</div>
                     <div class="description">Safari en un camión panorámico para convivir y alimentar animales en libertad. ¡Una aventura africana en México!</div>
                     <div class="info-box">                        <p><span class="label">Apto para:</span> Todo público</p>
-                    </div>
-                </div>
-            </div>
-            <div class="bottom-info" id="info-safari">
-                <div class="info-grid">
-                    <div class="info-item">
-                        <div class="info-label">Duración</div>
-                        <div class="info-value">20-30 min</div>
-                        <div class="info-desc">Recorrido completo</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">Especies</div>
-                        <div class="info-value">+50</div>
-                        <div class="info-desc">Animales en libertad</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">Horario</div>
-                        <div class="info-value">9:00 - 16:00</div>
-                        <div class="info-desc">Cada hora</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">Nivel</div>
-                        <div class="info-value">Familiar</div>
-                        <div class="info-desc">Interacción segura</div>
                     </div>
                 </div>
             </div>
@@ -625,32 +503,158 @@
                     </div>
                 </div>
             </div>
-            <div class="bottom-info" id="info-bucaneros">
-                <div class="info-grid">
-                    <div class="info-item">
-                        <div class="info-label">Duración</div>
-                        <div class="info-value">25-30 min</div>
-                        <div class="info-desc">Espectáculo completo</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">Funciones</div>
-                        <div class="info-value">4 al día</div>
-                        <div class="info-desc">12:00, 14:00, 16:00, 18:00</div>                    </div>
-                    <div class="info-item">
-                        <div class="info-label">Capacidad</div>
-                        <div class="info-value">200 personas</div>
-                        <div class="info-desc">Por función</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">Nivel</div>
-                        <div class="info-value">Entretenimiento</div>
-                        <div class="info-desc">Show en vivo</div>
-                    </div>
-                </div>
-            </div>
 
         </div>
 
+        <!-- Paneles de información - FUERA del slide -->
+        <div class="bottom-info" id="info-0">
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">Duración</div>
+                    <div class="info-value">3-5 min</div>
+                    <div class="info-desc">Recorrido completo</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Velocidad</div>
+                    <div class="info-value">40 km/h</div>
+                    <div class="info-desc">Máxima alcanzada</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Horario</div>
+                    <div class="info-value">10:00 - 18:00</div>
+                    <div class="info-desc">Todos los días</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Nivel</div>
+                    <div class="info-value">Emocionante</div>
+                    <div class="info-desc">Adrenalina media-alta</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-info" id="info-1">
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">Duración</div>
+                    <div class="info-value">2-3 min</div>
+                    <div class="info-desc">Vuelo completo</div>                </div>
+                <div class="info-item">
+                    <div class="info-label">Altura</div>
+                    <div class="info-value">10 metros</div>
+                    <div class="info-desc">Sobre el suelo</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Horario</div>
+                    <div class="info-value">10:00 - 17:00</div>
+                    <div class="info-desc">Clima permitting</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Nivel</div>
+                    <div class="info-value">Extremo</div>
+                    <div class="info-desc">Alta adrenalina</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-info" id="info-2">
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">Duración</div>
+                    <div class="info-value">1-2 min</div>
+                    <div class="info-desc">Descenso rápido</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Temperatura</div>
+                    <div class="info-value">-5°C</div>
+                    <div class="info-desc">Ambiente helado</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Horario</div>
+                    <div class="info-value">10:00 - 18:00</div>
+                    <div class="info-desc">Todos los días</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Nivel</div>
+                    <div class="info-value">Divertido</div>
+                    <div class="info-desc">Para toda la familia</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-info" id="info-3">
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">Duración</div>
+                    <div class="info-value">15-20 min</div>
+                    <div class="info-desc">Recorrido guiado</div>                </div>
+                <div class="info-item">
+                    <div class="info-label">Profundidad</div>
+                    <div class="info-value">500 metros</div>
+                    <div class="info-desc">Bajo tierra</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Horario</div>
+                    <div class="info-value">9:00 - 17:00</div>
+                    <div class="info-desc">Cada 30 min</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Nivel</div>
+                    <div class="info-value">Educativo</div>
+                    <div class="info-desc">Interactivo y cultural</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-info" id="info-4">
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">Duración</div>
+                    <div class="info-value">20-30 min</div>
+                    <div class="info-desc">Recorrido completo</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Especies</div>
+                    <div class="info-value">+50</div>
+                    <div class="info-desc">Animales en libertad</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Horario</div>
+                    <div class="info-value">9:00 - 16:00</div>
+                    <div class="info-desc">Cada hora</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Nivel</div>
+                    <div class="info-value">Familiar</div>
+                    <div class="info-desc">Interacción segura</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-info" id="info-5">
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">Duración</div>
+                    <div class="info-value">25-30 min</div>
+                    <div class="info-desc">Espectáculo completo</div>                </div>
+                <div class="info-item">
+                    <div class="info-label">Funciones</div>
+                    <div class="info-value">4 al día</div>
+                    <div class="info-desc">12:00, 14:00, 16:00, 18:00</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Capacidad</div>
+                    <div class="info-value">200 personas</div>
+                    <div class="info-desc">Por función</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Nivel</div>
+                    <div class="info-value">Entretenimiento</div>
+                    <div class="info-desc">Show en vivo</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Botones de navegación -->
         <div class="buttons">
             <button class="prev" aria-label="Anterior">&#10094;</button>
             <button class="next" aria-label="Siguiente">&#10095;</button>
@@ -662,8 +666,6 @@
         const prev = document.querySelector('.prev');
         const slide = document.getElementById('slide');
 
-        const infoIds = ['info-xcalibur', 'info-tirolesa', 'info-deslizador', 'info-subterraneum', 'info-safari', 'info-bucaneros'];
-
         function updateSlides() {
             const items = document.querySelectorAll('.item');
             const bottomInfos = document.querySelectorAll('.bottom-info');
@@ -673,23 +675,39 @@
                 info.classList.remove('visible');
             });
 
-            // Mostrar el panel correspondiente a la segunda tarjeta (la activa)
+            // Encontrar el índice de la segunda tarjeta (la activa)
+            // Necesitamos saber qué imagen está en posición 2
             const secondItem = items[1];
             if (secondItem) {
-                const index = Array.from(items).indexOf(secondItem);
-                if (infoIds[index]) {
-                    const infoPanel = document.getElementById(infoIds[index]);
-                    if (infoPanel) {
-                        setTimeout(() => {
-                            infoPanel.classList.add('visible');
-                        }, 100);
-                    }
-                }            }
+                // Buscar el índice original de esta tarjeta
+                const allItems = Array.from(items);
+                const originalIndex = allItems.indexOf(secondItem);
+                
+                // Como movemos las tarjetas, necesitamos un mapeo
+                // Usamos el order visual para determinar qué info mostrar                // La tarjeta en posición 1 (segunda) es la activa
+                // Necesitamos rastrear qué atracción es
+                
+                // Mostrar el panel correspondiente
+                // Como el orden cambia, usamos un contador
+                const currentIndex = parseInt(secondItem.dataset.index || '1');
+                const infoPanel = document.getElementById('info-' + currentIndex);
+                if (infoPanel) {
+                    setTimeout(() => {
+                        infoPanel.classList.add('visible');
+                    }, 100);
+                }
+            }
 
             items.forEach((item) => {
                 void item.offsetWidth;
             });
         }
+
+        // Asignar índices originales a cada item
+        const items = document.querySelectorAll('.item');
+        items.forEach((item, index) => {
+            item.dataset.index = index;
+        });
 
         next.addEventListener('click', () => {
             const items = document.querySelectorAll('.item');
@@ -715,8 +733,7 @@
             }
         });
 
-        let touchStartX = 0;
-        let touchEndX = 0;
+        let touchStartX = 0;        let touchEndX = 0;
 
         slide.addEventListener('touchstart', (e) => {
             touchStartX = e.changedTouches[0].screenX;
@@ -733,11 +750,13 @@
                 slide.appendChild(items[0]);
                 updateSlides();
             }
-            if (touchEndX > touchStartX + 50) {                slide.prepend(items[items.length - 1]);
+            if (touchEndX > touchStartX + 50) {
+                slide.prepend(items[items.length - 1]);
                 updateSlides();
             }
         }
 
+        // Inicializar
         updateSlides();
     </script>
 </body>
